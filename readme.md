@@ -1,0 +1,4 @@
+- multiple entry to multiple output
+- dynamic import of css, js
+- prefetch js
+- variable in js import

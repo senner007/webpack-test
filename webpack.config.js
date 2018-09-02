@@ -1,16 +1,22 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
 
-module.exports = {
+var config = {
+  // TODO: Add common Configuration
+  module: {},
+};
+
+var fooConfig = Object.assign({}, config, {
   entry: {
-    app: './src/index.js',
     examples: './examples/main.js'
   },
-  watch: true,
   mode: "development",
+  devServer: {
+        contentBase: './dist'
+   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: '[name].js'
+    filename: '[name].js',
   },
   module: {
     rules: [
@@ -20,7 +26,8 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
+            presets: ['@babel/preset-env'],
+            plugins: ["syntax-dynamic-import"]
           }
         }
       },
@@ -33,13 +40,90 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template : "./index.html",
-      chunks: ['app'],
-      filename: 'index1.html'
-    }),
-    new HtmlWebpackPlugin({
-      template : "./index.html",
       chunks: ['examples'],
-      filename: 'index2.html'
+      filename: 'index.html'
     })
   ]
-};
+});
+
+
+var barConfig = Object.assign({}, config,{
+  entry: {
+    app: './src/index.js',
+  },
+  mode: "production",
+  output: {
+    path: path.resolve(__dirname, './prod'),
+    filename: '[name].js',
+  },
+  module: {
+    rules: [
+      { 
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ["syntax-dynamic-import"]
+          }
+        }
+      },
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ]
+      }
+    ]
+  }
+});
+
+// Return Array of Configurations
+module.exports = [
+  fooConfig, barConfig,       
+];
+
+// module.exports = {
+//   entry: {
+//     app: './src/index.js',
+//     examples: './examples/main.js'
+//   },
+//   mode: "development",
+//   devServer: {
+//         contentBase: './dist'
+//    },
+//   output: {
+//     path: path.resolve(__dirname, './dist'),
+//     filename: '[name].js',
+//   },
+//   module: {
+//     rules: [
+//       { 
+//         test: /\.js$/,
+//         exclude: /(node_modules|bower_components)/,
+//         use: {
+//           loader: 'babel-loader',
+//           options: {
+//             presets: ['@babel/preset-env'],
+//             plugins: ["syntax-dynamic-import"]
+//           }
+//         }
+//       },
+//       {
+//         test: /\.css$/,
+//         use: [ 'style-loader', 'css-loader' ]
+//       }
+//     ]
+//   },
+//   plugins: [
+//     // new HtmlWebpackPlugin({
+//     //   template : "./index.html",
+//     //   chunks: ['app'],
+//     //   filename: 'index.html'
+//     // }),
+//     new HtmlWebpackPlugin({
+//       template : "./index.html",
+//       chunks: ['examples'],
+//       filename: 'index.html'
+//     })
+//   ]
+// };
