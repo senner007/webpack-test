@@ -1,4 +1,4 @@
-- multiple entry to multiple output
-- dynamic import of css, js
-- prefetch js
-- variable in js import
+- multiple entries to multiple outputs
+- dynamic import of css, js, html
+- prefetch modules
+- enabled variables in module imports
